@@ -136,9 +136,16 @@ h2{letter-spacing:.02em}
 
 .accountMessage{color:#7f877f;font-size:14px;line-height:2;text-align:center;margin:0 auto 32px;max-width:390px;word-break:keep-all}
 .accountMessage p{margin:0}.accountMessage p+p{margin-top:20px}
-.weddingCountdown{margin:28px auto 0;padding-top:24px;border-top:1px solid var(--line);max-width:350px;text-align:center}
-.countdownBadge{display:inline-block;background:#eaf0e9;border:1px solid #dce5da;border-radius:999px;padding:9px 24px;color:#637568;font-family:Georgia,serif;font-size:22px;letter-spacing:.08em}
-.countdownMessage{margin:12px 0 0;font-size:13px;line-height:1.8;color:var(--muted);word-break:keep-all}
+.weddingCountdown{margin:28px auto 0;padding:25px 14px 20px;border:1px solid #e4e7dd;border-radius:24px;max-width:350px;text-align:center;background:linear-gradient(145deg,#fffdf8,#f1f5ee);box-shadow:0 8px 24px #63756808}
+.countdownLove{color:#b9949e;font-size:16px;letter-spacing:.35em;margin-bottom:8px}
+.countdownTitle{margin:0 0 20px;color:#637568;font-size:14px;letter-spacing:.03em;font-weight:500}
+.countdownUnits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.countdownUnit{position:relative;background:#fffefb;border:1px solid #e4e7dd;border-radius:15px;padding:14px 2px 11px;box-shadow:0 4px 0 #e6ebdf}
+.countdownUnit:nth-child(even){background:#fbf4f3;border-color:#efdfdf;box-shadow:0 4px 0 #eddfdf}
+.countdownNumber{display:block;color:#566c59;font-family:Georgia,serif;font-size:clamp(24px,7vw,32px);line-height:1.2;font-variant-numeric:tabular-nums}
+.countdownUnit:nth-child(even) .countdownNumber{color:#a57c87}
+.countdownLabel{display:block;margin-top:7px;font-size:9px;color:#92998c;letter-spacing:.06em}
+.countdownMessage{margin:20px 0 0;font-size:12px;line-height:1.8;color:var(--muted);word-break:keep-all}
 </style>
 
   <link rel="canonical" href="https://chanyang91.github.io/mobilewedding/">
@@ -205,9 +212,16 @@ document.addEventListener('DOMContentLoaded',function(){
       <span class="sun">27</span><span>28</span><span>29</span><span>30</span><span>31</span><span class="wday">1</span><span class="wday">2</span>
     </div>
   </div>
-  <div class="weddingCountdown" id="weddingCountdown" hidden aria-live="polite">
-    <span class="countdownBadge" id="countdownBadge"></span>
-    <p class="countdownMessage" id="countdownMessage"></p>
+  <div class="weddingCountdown" id="weddingCountdown" hidden>
+    <div class="countdownLove" aria-hidden="true">♡ · ♡</div>
+    <p class="countdownTitle">우리의 시작까지 남은 시간</p>
+    <div class="countdownUnits" role="timer" aria-label="결혼식까지 남은 시간">
+      <div class="countdownUnit"><span class="countdownNumber" id="countdownDays">00</span><span class="countdownLabel">DAY · 일</span></div>
+      <div class="countdownUnit"><span class="countdownNumber" id="countdownHours">00</span><span class="countdownLabel">HOUR · 시간</span></div>
+      <div class="countdownUnit"><span class="countdownNumber" id="countdownMinutes">00</span><span class="countdownLabel">MINUTE · 분</span></div>
+      <div class="countdownUnit"><span class="countdownNumber" id="countdownSeconds">00</span><span class="countdownLabel">SECOND · 초</span></div>
+    </div>
+    <p class="countdownMessage" id="countdownMessage">2026년 12월 20일 · 오후 1시 20분</p>
   </div>
 </section>
 
@@ -410,25 +424,27 @@ function copyText(value,label){
 })();
 
 
-function weddingDaysRemaining(now = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Seoul', year: 'numeric', month: 'numeric', day: 'numeric'
-  }).formatToParts(now);
-  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
-  const today = Date.UTC(Number(values.year), Number(values.month) - 1, Number(values.day));
-  return Math.round((Date.UTC(2026, 11, 20) - today) / 86400000);
+const WEDDING_TIME = new Date('2026-12-20T13:20:00+09:00').getTime();
+function weddingTimeRemaining(now = Date.now()) {
+  const total = Math.max(0, Math.ceil((WEDDING_TIME - now) / 1000));
+  return { days: Math.floor(total / 86400), hours: Math.floor(total / 3600) % 24,
+    minutes: Math.floor(total / 60) % 60, seconds: total % 60 };
 }
 (function () {
   function updateCountdown() {
-    const days = weddingDaysRemaining();
-    document.getElementById('countdownBadge').textContent = days > 0 ? 'D−' + days : days === 0 ? 'D-DAY' : 'D+' + Math.abs(days);
-    document.getElementById('countdownMessage').textContent = days > 0
-      ? '찬양과 지수의 결혼식까지 ' + days + '일 남았습니다.'
-      : days === 0 ? '오늘, 찬양과 지수가 결혼합니다.' : '함께해 주신 따뜻한 마음에 감사드립니다.';
+    const time = weddingTimeRemaining();
+    for (const unit of ['days', 'hours', 'minutes', 'seconds']) {
+      const id = 'countdown' + unit.charAt(0).toUpperCase() + unit.slice(1);
+      document.getElementById(id).textContent = String(time[unit]).padStart(2, '0');
+    }
+    if (Date.now() >= WEDDING_TIME) {
+      document.querySelector('.countdownTitle').textContent = '찬양과 지수의 새로운 시작 ♡';
+      document.getElementById('countdownMessage').textContent = '소중한 날을 함께해 주셔서 감사합니다.';
+    }
     document.getElementById('weddingCountdown').hidden = false;
   }
   updateCountdown();
-  setInterval(updateCountdown, 60000);
+  setInterval(updateCountdown, 1000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) updateCountdown(); });
 })();
 </script>
