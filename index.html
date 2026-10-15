@@ -118,6 +118,27 @@ h2{letter-spacing:.02em}
 .hero img{image-rendering:auto!important;}
 .hero::before,.hero::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
 
+
+.contactGroups{display:grid;gap:14px;max-width:390px;margin:28px auto 0;text-align:left}
+.contactGroup{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fffefb;box-shadow:0 8px 26px #53635808}
+.contactGroup summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 20px;min-height:66px;color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.contactGroup summary::-webkit-details-marker{display:none}
+.groomGroup summary{background:#edf2ed}.brideGroup summary{background:#f4eef1}
+.groupChevron{flex:0 0 8px;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s}
+.contactGroup[open] .groupChevron{transform:rotate(225deg)}
+.contactGroup summary:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:16px}
+.contactGroup .contactCards{gap:0;margin:0;max-width:none;padding:0 20px}
+.contactGroup .personCard{border:0;border-radius:0!important;box-shadow:none;background:transparent;padding:22px 0}
+.contactGroup .personCard+.personCard{border-top:1px solid var(--line)}
+.contactGroup .personTop{gap:10px}.contactGroup .personTop strong{font-size:14px}.contactGroup .phoneBtn{white-space:nowrap;color:#647568}
+.contactGroup .account b{border:0;background:none;box-shadow:none}
+@media(prefers-reduced-motion:reduce){.groupChevron{transition:none}}
+
+.accountMessage{color:#7f877f;font-size:14px;line-height:2;text-align:center;margin:0 auto 32px;max-width:390px;word-break:keep-all}
+.accountMessage p{margin:0}.accountMessage p+p{margin-top:20px}
+.weddingCountdown{margin:28px auto 0;padding-top:24px;border-top:1px solid var(--line);max-width:350px;text-align:center}
+.countdownBadge{display:inline-block;background:#eaf0e9;border:1px solid #dce5da;border-radius:999px;padding:9px 24px;color:#637568;font-family:Georgia,serif;font-size:22px;letter-spacing:.08em}
+.countdownMessage{margin:12px 0 0;font-size:13px;line-height:1.8;color:var(--muted);word-break:keep-all}
 </style>
 
   <link rel="canonical" href="https://chanyang91.github.io/mobilewedding/">
@@ -183,6 +204,10 @@ document.addEventListener('DOMContentLoaded',function(){
       <span class="wedding">20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span>
       <span class="sun">27</span><span>28</span><span>29</span><span>30</span><span>31</span><span class="wday">1</span><span class="wday">2</span>
     </div>
+  </div>
+  <div class="weddingCountdown" id="weddingCountdown" hidden aria-live="polite">
+    <span class="countdownBadge" id="countdownBadge"></span>
+    <p class="countdownMessage" id="countdownMessage"></p>
   </div>
 </section>
 
@@ -276,29 +301,42 @@ document.addEventListener('DOMContentLoaded',function(){
 
 <section class="contact">
   <div class="eyebrow">Contact</div><h2>마음 전하실 곳</h2>
-  <div class="contactCards">
+  <div class="accountMessage">
+    <p>멀리서도 축하의 마음을<br>전하고 싶으신 분들을 위해<br>계좌번호를 안내드립니다.</p>
+    <p>소중한 축하를 보내주셔서 감사드리며,<br>따뜻한 마음에 깊이 감사드립니다.</p>
+  </div>
+  <div class="contactGroups">
+    <details class="contactGroup groomGroup">
+      <summary><span>신랑측</span><span class="groupChevron" aria-hidden="true"></span></summary>
+      <div class="contactCards">
     <div class="personCard">
-      <div class="personTop"><strong>신랑 정찬양</strong><a class="phoneBtn" href="tel:01027070879">전화하기</a></div>
+      <div class="personTop"><strong>신랑 정찬양</strong></div>
       <div class="account">새마을금고 <b>9003-2937-2627-7</b></div>
       <button class="copyAccount" onclick="copyText('9003293726277','신랑 계좌번호')">계좌번호 복사</button>
     </div>
     <div class="personCard">
-      <div class="personTop"><strong>신랑측 아버지 정운규</strong><a class="phoneBtn" href="tel:01027508564">전화하기</a></div>
+      <div class="personTop"><strong>신랑측 아버지 정운규</strong></div>
       <div class="account">우리은행 <b>304-08-122977</b></div>
       <button class="copyAccount" onclick="copyText('30408122977','정운규 계좌번호')">계좌번호 복사</button>
     </div>
     <div class="personCard">
-      <div class="personTop"><strong>신랑측 어머니 박양숙</strong><a class="phoneBtn" href="tel:01027548564">전화하기</a></div>
+      <div class="personTop"><strong>신랑측 어머니 박양숙</strong></div>
       <div class="account">신한은행 <b>395-13-004455</b></div>
       <button class="copyAccount" onclick="copyText('39513004455','박양숙 계좌번호')">계좌번호 복사</button>
     </div>
+      </div>
+    </details>
+    <details class="contactGroup brideGroup">
+      <summary><span>신부측</span><span class="groupChevron" aria-hidden="true"></span></summary>
+      <div class="contactCards">
     <div class="personCard">
-      <div class="personTop"><strong>신부 문지수</strong><a class="phoneBtn" href="tel:01065145314">전화하기</a></div>
+      <div class="personTop"><strong>신부 문지수</strong></div>
       <div class="account">신한은행 <b>110-494-458000</b></div>
       <button class="copyAccount" onclick="copyText('110494458000','신부 계좌번호')">계좌번호 복사</button>
     </div>
+      </div>
+    </details>
   </div>
-  <div class="note">축하해 주시는 마음, 감사히 간직하겠습니다.</div>
 </section>
 
 <section class="share">
@@ -371,5 +409,27 @@ function copyText(value,label){
   sync();
 })();
 
+
+function weddingDaysRemaining(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Seoul', year: 'numeric', month: 'numeric', day: 'numeric'
+  }).formatToParts(now);
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  const today = Date.UTC(Number(values.year), Number(values.month) - 1, Number(values.day));
+  return Math.round((Date.UTC(2026, 11, 20) - today) / 86400000);
+}
+(function () {
+  function updateCountdown() {
+    const days = weddingDaysRemaining();
+    document.getElementById('countdownBadge').textContent = days > 0 ? 'D−' + days : days === 0 ? 'D-DAY' : 'D+' + Math.abs(days);
+    document.getElementById('countdownMessage').textContent = days > 0
+      ? '찬양과 지수의 결혼식까지 ' + days + '일 남았습니다.'
+      : days === 0 ? '오늘, 찬양과 지수가 결혼합니다.' : '함께해 주신 따뜻한 마음에 감사드립니다.';
+    document.getElementById('weddingCountdown').hidden = false;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) updateCountdown(); });
+})();
 </script>
 </body></html>
